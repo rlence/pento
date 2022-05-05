@@ -23,6 +23,7 @@ defmodule PentoWeb.WrongLive do
       <button phx-click="restart" > Restart the game  </button>
     <% end %>
     """
+
     end
 
   def initial_state(socket, session_id) do

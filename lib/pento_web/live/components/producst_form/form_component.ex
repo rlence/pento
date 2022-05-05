@@ -15,6 +15,7 @@ defmodule PentoWeb.ProductLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"product" => product_params}, socket) do
+    IO.inspect product_params
     changeset =
       socket.assigns.product
       |> Catalog.change_product(product_params)
