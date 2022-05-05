@@ -36,7 +36,7 @@ defmodule PentoWeb.WrongLive do
 
      {_, message, score, is_win} = cond do
       select_number == socket.assigns.win -> {:ok, "Your guess: #{guess}. Win. Trai again", socket.assigns.score + 1, true}
-      select_number != socket.assigns.win -> {:ok, "Your guess: #{guess}. Win. Wrong again", socket.assigns.score - 1, false}
+      select_number != socket.assigns.win -> {:ok, "Your guess: #{guess}. Lose. Wrong again", socket.assigns.score - 1, false}
     end
 
     { :noreply, assign(socket, message: message, score: score, is_win: is_win) }
