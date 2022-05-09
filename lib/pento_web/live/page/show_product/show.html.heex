@@ -1,5 +1,6 @@
 <h1>Show Product</h1>
 
+
 <%= if @live_action in [:edit] do %>
   <.modal return_to={Routes.product_show_path(@socket, :show, @product)}>
     <.live_component
@@ -36,6 +37,15 @@
   </li>
 
 </ul>
+
+<article class="column">
+  <img
+  alt="product image" 
+  width="200" 
+  height="200"
+  src="{ @product.image_upload }">
+</article>
+
 
 <span><%= live_patch "Edit", to: Routes.product_show_path(@socket, :edit, @product), class: "button" %></span> |
 <span><%= live_redirect "Back", to: Routes.product_index_path(@socket, :index) %></span>

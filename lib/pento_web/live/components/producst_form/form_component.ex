@@ -3,6 +3,33 @@ defmodule PentoWeb.ProductLive.FormComponent do
 
   alias Pento.Catalog
 
+  def update_changeset(%{assigns: %{changeset: changeset}} = socket, key, value) do
+    socket
+    |> assign(:changeset, Ecto.Changeset.put_change(changeset, key, value))
+  end
+
+  defp upload_static_file(%{path: path}, socket) do
+    # Plug in your production image file persistence implementation here!
+    dest = Path.join("priv/static/images", Path.basename(path))
+    File.cp!(path, dest)
+    Routes.static_path(socket, "/images/#{Path.basename(dest)}")
+  end
+
+  defp handle_progress(:file, entry, socket) do
+    if entry.done? do
+      path =
+        consume_uploaded_entry(
+        socket,entry,
+        &upload_static_file(&1, socket) )
+      {:noreply, socket
+        |> put_flash(:info, "file #{entry.client_name} uploaded")
+        |> update_changeset(:image_upload, path)}
+    else
+      {:noreply, socket}
+    end
+  end
+
+
   @impl true
   def update(%{product: product} = assigns, socket) do
     changeset = Catalog.change_product(product)
@@ -10,7 +37,14 @@ defmodule PentoWeb.ProductLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(:changeset, changeset)
+     |> allow_upload(:image,
+      accept: ~w(.jpg .jpeg .png),
+      max_entries: 1,
+      max_file_size: 9_000_000,
+      auto_upload: true,
+      #progress: &handle_progress/3
+     )}
   end
 
   @impl true
