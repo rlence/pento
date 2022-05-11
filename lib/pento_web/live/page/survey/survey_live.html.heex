@@ -3,6 +3,11 @@
 </section>
 <%= if @demographic do %>
         <Show.details demographic={@demographic} />
+        <Index.list products={@products}
+            current_user={@current_user}
+            demographic={@demographic} 
+        />
     <% else %>
         <.live_component module={PentoWeb.DemographicLive.Form} id="demographic-form" user={@current_user} />
 <% end %>
+
